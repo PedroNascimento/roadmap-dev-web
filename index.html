@@ -1,0 +1,808 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Roadmap interativo para sair do zero e se tornar desenvolvedor web, com Linux, fundamentos, projetos, deploy, bancos de dados, arquitetura, IA e uma trilha Java opcional.">
+  <meta name="theme-color" content="#07111f">
+  <title>Roadmap Dev Web — do zero ao portfólio</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2307111f'/%3E%3Cpath d='M17 18v12c0 4 3 7 7 7h16c4 0 7 3 7 7v2' fill='none' stroke='%2358e6d2' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='17' cy='18' r='7' fill='%23d8ff68'/%3E%3Ccircle cx='47' cy='46' r='7' fill='%23ff9c5b'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07111f;
+      --bg-elev: #0b1728;
+      --surface: #102137;
+      --surface-2: #142a44;
+      --text: #edf6ff;
+      --muted: #9fb2c7;
+      --line: #29425e;
+      --cyan: #58e6d2;
+      --lime: #d8ff68;
+      --orange: #ff9c5b;
+      --blue: #74a8ff;
+      --pink: #f594c9;
+      --shadow: 0 24px 70px rgba(0,0,0,.28);
+      --radius: 18px;
+      --sidebar: 292px;
+    }
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #f4f8fb;
+      --bg-elev: #ffffff;
+      --surface: #ffffff;
+      --surface-2: #eaf2f8;
+      --text: #102033;
+      --muted: #55687d;
+      --line: #cbd9e5;
+      --cyan: #007f78;
+      --lime: #537600;
+      --orange: #a94d0f;
+      --blue: #245fc5;
+      --pink: #a63377;
+      --shadow: 0 20px 50px rgba(35,63,87,.12);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 86px; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background:
+        radial-gradient(circle at 82% -10%, rgba(88,230,210,.12), transparent 30rem),
+        radial-gradient(circle at 5% 18%, rgba(116,168,255,.09), transparent 26rem),
+        var(--bg);
+      color: var(--text);
+      font: 16px/1.6 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    button, input { font: inherit; }
+    button, a, summary, label { -webkit-tap-highlight-color: transparent; }
+    a { color: var(--cyan); text-underline-offset: 3px; }
+    a:hover { color: var(--lime); }
+    :focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
+    .skip-link { position: fixed; left: 1rem; top: -5rem; z-index: 200; padding: .7rem 1rem; background: var(--lime); color: #07111f; border-radius: 10px; font-weight: 800; }
+    .skip-link:focus { top: 1rem; }
+    .topbar {
+      position: fixed; inset: 0 0 auto 0; z-index: 100;
+      height: 70px; display: flex; align-items: center; gap: 1rem;
+      padding: 0 clamp(1rem, 3vw, 2.5rem);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 72%, transparent);
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(18px);
+    }
+    .brand { display: flex; align-items: center; gap: .75rem; min-width: max-content; font-weight: 900; letter-spacing: -.03em; }
+    .brand-mark { width: 34px; height: 34px; border: 2px solid var(--cyan); border-radius: 11px; display: grid; place-items: center; color: var(--lime); font: 900 14px/1 ui-monospace, monospace; box-shadow: inset 0 0 18px rgba(88,230,210,.12); }
+    .brand small { color: var(--muted); font-weight: 650; letter-spacing: 0; }
+    .top-actions { margin-left: auto; display: flex; align-items: center; gap: .5rem; }
+    .icon-btn, .action-btn, .chip, .nav-toggle {
+      border: 1px solid var(--line); color: var(--text); background: var(--surface);
+      border-radius: 12px; cursor: pointer; transition: .18s ease;
+    }
+    .icon-btn, .nav-toggle { min-width: 42px; min-height: 42px; display: grid; place-items: center; }
+    .icon-btn:hover, .action-btn:hover, .chip:hover, .nav-toggle:hover { border-color: var(--cyan); transform: translateY(-1px); }
+    .action-btn { min-height: 42px; padding: .55rem .85rem; font-weight: 800; }
+    .nav-toggle { display: none; }
+    .layout { display: grid; grid-template-columns: var(--sidebar) minmax(0, 1fr); min-height: 100vh; padding-top: 70px; }
+    .sidebar {
+      position: fixed; inset: 70px auto 0 0; width: var(--sidebar); overflow-y: auto;
+      padding: 1.4rem 1rem 2rem; border-right: 1px solid var(--line); background: color-mix(in srgb, var(--bg-elev) 91%, transparent);
+    }
+    .progress-card { padding: 1rem; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); margin-bottom: 1.1rem; }
+    .progress-head { display: flex; align-items: baseline; justify-content: space-between; gap: .7rem; }
+    .progress-head strong { font-size: .88rem; letter-spacing: .07em; text-transform: uppercase; }
+    .progress-head output { color: var(--lime); font-weight: 900; }
+    .progress-track { margin-top: .6rem; height: 9px; overflow: hidden; border-radius: 99px; background: var(--bg); border: 1px solid var(--line); }
+    .progress-fill { width: 0; height: 100%; background: linear-gradient(90deg, var(--cyan), var(--lime)); transition: width .3s ease; }
+    .progress-card p { color: var(--muted); font-size: .8rem; line-height: 1.4; margin: .65rem 0 0; }
+    .side-label { margin: 1.2rem .65rem .45rem; color: var(--muted); text-transform: uppercase; letter-spacing: .11em; font-size: .72rem; font-weight: 900; }
+    .side-nav { display: grid; gap: .2rem; }
+    .side-nav a { position: relative; display: grid; grid-template-columns: 28px 1fr; gap: .55rem; align-items: center; min-height: 42px; padding: .45rem .65rem; color: var(--muted); border-radius: 10px; text-decoration: none; font-size: .88rem; font-weight: 700; }
+    .side-nav a:hover, .side-nav a.active { color: var(--text); background: var(--surface); }
+    .side-nav a.active::before { content: ""; position: absolute; left: -1rem; width: 3px; height: 24px; border-radius: 0 5px 5px 0; background: var(--cyan); }
+    .nav-index { display: grid; place-items: center; width: 25px; height: 25px; border: 1px solid var(--line); border-radius: 50%; color: var(--cyan); font: 800 .7rem/1 ui-monospace, monospace; }
+    main { grid-column: 2; min-width: 0; width: min(1180px, 100%); margin: 0 auto; padding: clamp(1.25rem, 3vw, 3rem) clamp(1rem, 4vw, 4rem) 6rem; }
+    .intro { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(280px, .6fr); gap: 1rem; align-items: stretch; }
+    .intro-main, .route-card { border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(145deg, color-mix(in srgb, var(--surface) 92%, var(--cyan)), var(--surface)); box-shadow: var(--shadow); }
+    .intro-main { padding: clamp(1.4rem, 4vw, 3rem); position: relative; overflow: hidden; }
+    .intro-main::after { content: "</>"; position: absolute; right: clamp(.4rem, 3vw, 2rem); bottom: -1.7rem; color: color-mix(in srgb, var(--cyan) 12%, transparent); font: 900 clamp(6rem, 16vw, 11rem)/1 ui-monospace, monospace; pointer-events: none; }
+    .eyebrow { margin: 0 0 .65rem; color: var(--cyan); text-transform: uppercase; letter-spacing: .13em; font-size: .75rem; font-weight: 900; }
+    h1 { max-width: 13ch; margin: 0; font-size: clamp(2.25rem, 6vw, 5.3rem); line-height: .95; letter-spacing: -.065em; }
+    h1 em { color: var(--lime); font-style: normal; }
+    .lede { max-width: 64ch; color: var(--muted); font-size: clamp(1rem, 1.7vw, 1.18rem); margin: 1.2rem 0 1.4rem; }
+    .quick-facts { display: flex; flex-wrap: wrap; gap: .55rem; position: relative; z-index: 1; }
+    .fact { padding: .5rem .7rem; border: 1px solid var(--line); border-radius: 999px; color: var(--text); background: color-mix(in srgb, var(--bg) 56%, transparent); font-size: .82rem; font-weight: 750; }
+    .route-card { padding: 1.35rem; display: flex; flex-direction: column; }
+    .route-card h2 { font-size: 1.25rem; margin: 0 0 .2rem; }
+    .route-card > p { color: var(--muted); font-size: .9rem; margin: 0 0 1rem; }
+    .route-line { position: relative; display: grid; gap: .85rem; margin: .5rem 0 1rem; }
+    .route-line::before { content: ""; position: absolute; left: 13px; top: 12px; bottom: 12px; width: 2px; background: linear-gradient(var(--cyan), var(--blue), var(--orange)); }
+    .route-stop { position: relative; display: grid; grid-template-columns: 28px 1fr; gap: .65rem; align-items: start; font-size: .86rem; }
+    .route-dot { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; z-index: 1; background: var(--surface); border: 2px solid var(--cyan); font: 900 .65rem/1 ui-monospace, monospace; }
+    .route-stop:nth-child(3n+2) .route-dot { border-color: var(--blue); }
+    .route-stop:nth-child(3n) .route-dot { border-color: var(--orange); }
+    .route-stop strong { display: block; }
+    .route-stop span { color: var(--muted); }
+    .route-note { margin-top: auto; padding-top: .9rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .78rem; }
+    .controls { position: sticky; top: 82px; z-index: 60; margin: 1rem 0 2rem; padding: .75rem; display: flex; align-items: center; flex-wrap: wrap; gap: .55rem; border: 1px solid var(--line); border-radius: 16px; background: color-mix(in srgb, var(--bg-elev) 90%, transparent); backdrop-filter: blur(16px); box-shadow: 0 12px 32px rgba(0,0,0,.14); }
+    .search { position: relative; flex: 1 1 250px; }
+    .search span { position: absolute; left: .8rem; top: 50%; transform: translateY(-50%); color: var(--muted); }
+    .search input { width: 100%; min-height: 42px; padding: .55rem .8rem .55rem 2.3rem; border: 1px solid var(--line); border-radius: 11px; color: var(--text); background: var(--bg); }
+    .filters { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .chip { min-height: 38px; padding: .4rem .7rem; color: var(--muted); font-size: .8rem; font-weight: 850; }
+    .chip[aria-pressed="true"] { color: #061019; border-color: var(--lime); background: var(--lime); }
+    .section { margin: 2rem 0 3.6rem; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+    .section-head h2 { margin: 0; font-size: clamp(1.55rem, 3vw, 2.3rem); letter-spacing: -.035em; }
+    .section-head p { max-width: 62ch; margin: .3rem 0 0; color: var(--muted); }
+    .meta-pill { flex: none; border: 1px solid var(--line); border-radius: 99px; padding: .35rem .65rem; color: var(--muted); font-size: .76rem; font-weight: 800; }
+    .setup-grid, .decision-grid, .resources-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .85rem; }
+    .info-card { padding: 1.1rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+    .info-card h3 { margin: 0 0 .4rem; font-size: 1.05rem; }
+    .info-card p { margin: 0; color: var(--muted); font-size: .9rem; }
+    .info-card .tag { display: inline-block; margin-bottom: .65rem; color: var(--cyan); font: 850 .72rem/1 ui-monospace, monospace; text-transform: uppercase; letter-spacing: .08em; }
+    .callout { margin-top: .9rem; padding: 1rem 1.1rem; border-left: 4px solid var(--lime); border-radius: 0 14px 14px 0; background: color-mix(in srgb, var(--lime) 8%, var(--surface)); color: var(--muted); }
+    .callout strong { color: var(--text); }
+    .roadmap { position: relative; display: grid; gap: 1rem; }
+    .roadmap::before { content: ""; position: absolute; left: 26px; top: 2rem; bottom: 2rem; width: 3px; border-radius: 3px; background: linear-gradient(var(--cyan), var(--blue) 50%, var(--orange)); opacity: .55; }
+    .phase { position: relative; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); overflow: clip; transition: border-color .2s, opacity .2s; }
+    .phase[hidden] { display: none; }
+    .phase:hover { border-color: color-mix(in srgb, var(--cyan) 56%, var(--line)); }
+    .phase summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; gap: 1rem; align-items: center; padding: 1.15rem; }
+    .phase summary::-webkit-details-marker { display: none; }
+    .phase-number { width: 52px; height: 52px; z-index: 2; display: grid; place-items: center; border: 3px solid var(--cyan); border-radius: 50%; background: var(--bg-elev); color: var(--cyan); font: 900 .9rem/1 ui-monospace, monospace; box-shadow: 0 0 0 6px var(--surface); }
+    .phase[data-track~="java"] .phase-number { border-color: var(--orange); color: var(--orange); }
+    .phase[data-track~="career"] .phase-number { border-color: var(--pink); color: var(--pink); }
+    .phase-title h3 { margin: 0; font-size: clamp(1.08rem, 2vw, 1.35rem); letter-spacing: -.02em; }
+    .phase-title p { margin: .2rem 0 0; color: var(--muted); font-size: .87rem; }
+    .phase-meta { display: flex; align-items: center; gap: .6rem; }
+    .phase-time { color: var(--muted); font-size: .76rem; font-weight: 800; white-space: nowrap; }
+    .chevron { width: 32px; height: 32px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; transition: transform .2s; }
+    .phase[open] .chevron { transform: rotate(180deg); }
+    .phase-body { padding: 0 1.15rem 1.3rem calc(1.15rem + 68px); }
+    .phase-progress { display: flex; align-items: center; gap: .7rem; margin-bottom: 1rem; color: var(--muted); font-size: .78rem; }
+    .phase-progress .mini-track { flex: 1; max-width: 190px; height: 5px; background: var(--bg); border-radius: 99px; overflow: hidden; }
+    .phase-progress .mini-fill { height: 100%; width: 0; background: var(--cyan); transition: width .2s; }
+    .phase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .phase-block { min-width: 0; }
+    .phase-block h4 { margin: 0 0 .55rem; font-size: .76rem; color: var(--cyan); text-transform: uppercase; letter-spacing: .1em; }
+    .checklist { display: grid; gap: .38rem; }
+    .task { display: grid; grid-template-columns: 22px 1fr; gap: .55rem; align-items: start; padding: .48rem .55rem; border-radius: 9px; color: var(--text); cursor: pointer; }
+    .task:hover { background: var(--surface-2); }
+    .task input { appearance: none; width: 19px; height: 19px; margin: .15rem 0 0; border: 2px solid var(--line); border-radius: 6px; background: var(--bg); cursor: pointer; }
+    .task input:checked { border-color: var(--lime); background: var(--lime); box-shadow: inset 0 0 0 4px var(--bg); }
+    .task:has(input:checked) span { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line); }
+    .task span { font-size: .9rem; }
+    .project-list { display: grid; gap: .65rem; }
+    .project { padding: .75rem; border: 1px solid var(--line); border-radius: 12px; background: color-mix(in srgb, var(--bg) 52%, transparent); }
+    .project strong { display: block; font-size: .92rem; }
+    .project p { margin: .2rem 0 0; color: var(--muted); font-size: .82rem; }
+    .deliverable { margin-top: 1rem; padding: .8rem; border-radius: 12px; border: 1px dashed var(--cyan); color: var(--muted); font-size: .84rem; }
+    .deliverable strong { color: var(--cyan); }
+    code { padding: .1rem .28rem; border-radius: 5px; color: var(--lime); background: var(--bg); font: .88em/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .decision-grid .info-card:nth-child(2) { border-color: color-mix(in srgb, var(--cyan) 65%, var(--line)); box-shadow: inset 0 3px 0 var(--cyan); }
+    .stack-list { margin: .7rem 0 0; padding-left: 1.15rem; color: var(--muted); font-size: .88rem; }
+    .stack-list li + li { margin-top: .32rem; }
+    .matrix-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 16px; }
+    table { border-collapse: collapse; width: 100%; min-width: 720px; background: var(--surface); }
+    th, td { text-align: left; padding: .8rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--cyan); font-size: .73rem; text-transform: uppercase; letter-spacing: .08em; background: var(--bg-elev); }
+    td { color: var(--muted); font-size: .86rem; }
+    td strong { color: var(--text); }
+    tr:last-child td { border-bottom: 0; }
+    .repo-template { padding: 1.1rem; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+    .repo-template pre { overflow-x: auto; margin: .7rem 0 0; padding: 1rem; border-radius: 12px; background: var(--bg); color: var(--muted); font: .82rem/1.55 ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .resources-grid a { display: block; font-weight: 850; text-decoration: none; }
+    .resources-grid small { display: block; color: var(--muted); margin-top: .25rem; }
+    .empty-state { display: none; text-align: center; padding: 2rem; border: 1px dashed var(--line); border-radius: 16px; color: var(--muted); }
+    .empty-state.visible { display: block; }
+    footer { margin-top: 4rem; padding-top: 1.3rem; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 1rem; color: var(--muted); font-size: .8rem; }
+    .toast { position: fixed; z-index: 300; right: 1rem; bottom: 1rem; max-width: min(360px, calc(100vw - 2rem)); padding: .75rem 1rem; border: 1px solid var(--cyan); border-radius: 12px; background: var(--surface); color: var(--text); box-shadow: var(--shadow); opacity: 0; transform: translateY(12px); pointer-events: none; transition: .2s; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    @media (max-width: 980px) {
+      .nav-toggle { display: grid; }
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { transform: translateX(-105%); transition: transform .25s ease; z-index: 90; box-shadow: var(--shadow); }
+      body.nav-open .sidebar { transform: translateX(0); }
+      main { grid-column: 1; width: 100%; }
+      .intro { grid-template-columns: 1fr; }
+      .route-card { display: grid; grid-template-columns: minmax(180px,.45fr) 1fr; gap: 1rem; }
+      .route-card > p, .route-card h2, .route-note { grid-column: 1; }
+      .route-line { grid-column: 2; grid-row: 1 / span 3; margin: 0; }
+    }
+    @media (max-width: 720px) {
+      .brand small, .action-btn .wide { display: none; }
+      .topbar { height: 64px; padding-inline: .75rem; gap: .55rem; }
+      .layout { padding-top: 64px; }
+      .sidebar { top: 64px; width: min(88vw, 320px); }
+      main { padding: 1rem .8rem 4rem; }
+      .intro-main { padding: 1.35rem; }
+      .intro-main::after { opacity: .45; }
+      .route-card { display: flex; }
+      .phase summary { grid-template-columns: 44px minmax(0,1fr); gap: .75rem; padding: .9rem; }
+      .phase-number { width: 44px; height: 44px; }
+      .phase-meta { grid-column: 2; justify-content: space-between; }
+      .phase-body { padding: 0 .9rem 1rem; }
+      .phase-grid, .setup-grid, .decision-grid, .resources-grid { grid-template-columns: 1fr; }
+      .roadmap::before { display: none; }
+      .controls { top: 72px; align-items: stretch; }
+      .filters { flex-wrap: nowrap; overflow-x: auto; padding-bottom: .1rem; }
+      .chip { flex: 0 0 auto; }
+      .section-head { align-items: start; flex-direction: column; }
+      footer { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+    @media print {
+      :root { color-scheme: light; --bg:#fff; --bg-elev:#fff; --surface:#fff; --surface-2:#f4f4f4; --text:#111; --muted:#444; --line:#bbb; --cyan:#005f59; --lime:#476600; --orange:#8b3e08; }
+      .topbar, .sidebar, .controls, .toast { display: none !important; }
+      .layout { display: block; padding: 0; }
+      main { width: 100%; padding: 0; }
+      .intro { grid-template-columns: 1fr 1fr; }
+      .intro-main, .route-card, .phase, .info-card { box-shadow: none; break-inside: avoid; }
+      .phase { display: block !important; }
+      .phase > summary { pointer-events: none; }
+      .phase-body { display: block !important; }
+      .controls { position: static; }
+      a { color: inherit; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <header class="topbar">
+    <button class="nav-toggle" id="navToggle" type="button" aria-label="Abrir navegação" aria-expanded="false">☰</button>
+    <div class="brand"><span class="brand-mark">DEV</span><span>Roadmap Web <small>· do zero ao portfólio</small></span></div>
+    <div class="top-actions">
+      <button class="action-btn" id="expandAll" type="button"><span aria-hidden="true">↕</span> <span class="wide">Expandir fases</span></button>
+      <button class="icon-btn" id="printBtn" type="button" aria-label="Imprimir ou salvar em PDF" title="Imprimir ou salvar em PDF">⎙</button>
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="Alternar tema" title="Alternar tema">◐</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Navegação do roadmap">
+      <div class="progress-card">
+        <div class="progress-head"><strong>Seu progresso</strong><output id="progressOutput">0%</output></div>
+        <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+        <p><span id="progressCount">0 de 0 tópicos</span> · salvo apenas neste navegador.</p>
+      </div>
+      <div class="side-label">Navegação</div>
+      <nav class="side-nav">
+        <a href="#comece"><span class="nav-index">00</span><span>Comece aqui</span></a>
+        <a href="#roadmap"><span class="nav-index">01</span><span>Fases do roadmap</span></a>
+        <a href="#stacks"><span class="nav-index">02</span><span>Escolha de stack</span></a>
+        <a href="#fase-12"><span class="nav-index">03</span><span>Trilha Java</span></a>
+        <a href="#projetos"><span class="nav-index">04</span><span>Portfólio e GitHub</span></a>
+        <a href="#ia"><span class="nav-index">05</span><span>Desenvolvimento com IA</span></a>
+        <a href="#fontes"><span class="nav-index">06</span><span>Fontes oficiais</span></a>
+      </nav>
+      <div class="side-label">Ações</div>
+      <button class="action-btn" id="resetBtn" type="button" style="width:100%">Limpar progresso</button>
+    </aside>
+
+    <main id="conteudo">
+      <section class="intro" id="comece">
+        <div class="intro-main">
+          <p class="eyebrow">Guia prático · atualizado em setembro de 2026</p>
+          <h1>Do primeiro comando ao <em>deploy.</em></h1>
+          <p class="lede">Uma rota progressiva para aprender programação, dominar a web, construir projetos públicos e chegar a uma stack profissional — sem tentar estudar tudo ao mesmo tempo.</p>
+          <div class="quick-facts">
+            <span class="fact">12–18 meses sugeridos</span>
+            <span class="fact">10–15 h por semana</span>
+            <span class="fact">14 fases</span>
+            <span class="fact">projetos em todas as etapas</span>
+          </div>
+        </div>
+        <aside class="route-card" aria-label="Resumo da rota recomendada">
+          <h2>A rota recomendada</h2>
+          <p>Construa uma camada por vez. Java entra depois que a base web e de back-end estiver firme.</p>
+          <div class="route-line">
+            <div class="route-stop"><span class="route-dot">01</span><div><strong>Base</strong><span>Linux · lógica · Git</span></div></div>
+            <div class="route-stop"><span class="route-dot">02</span><div><strong>Web</strong><span>HTML · CSS · JS · TS</span></div></div>
+            <div class="route-stop"><span class="route-dot">03</span><div><strong>Produto</strong><span>React · API · PostgreSQL</span></div></div>
+            <div class="route-stop"><span class="route-dot">04</span><div><strong>Profissional</strong><span>testes · arquitetura · cloud</span></div></div>
+            <div class="route-stop"><span class="route-dot">05</span><div><strong>Especialização</strong><span>Java + Spring ou aprofundamento web</span></div></div>
+          </div>
+          <div class="route-note"><strong>Regra de avanço:</strong> você não precisa saber 100%. Avance quando conseguir explicar, implementar e depurar um projeto pequeno sem copiar um tutorial inteiro.</div>
+        </aside>
+      </section>
+
+      <div class="controls" aria-label="Ferramentas do roadmap">
+        <label class="search"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Buscar tema, tecnologia ou projeto…" autocomplete="off" aria-label="Buscar no roadmap"></label>
+        <div class="filters" aria-label="Filtrar fases">
+          <button class="chip" type="button" data-filter="all" aria-pressed="true">Tudo</button>
+          <button class="chip" type="button" data-filter="core" aria-pressed="false">Fundamentos</button>
+          <button class="chip" type="button" data-filter="web" aria-pressed="false">Web</button>
+          <button class="chip" type="button" data-filter="engineering" aria-pressed="false">Engenharia</button>
+          <button class="chip" type="button" data-filter="java" aria-pressed="false">Java</button>
+          <button class="chip" type="button" data-filter="career" aria-pressed="false">Carreira</button>
+        </div>
+      </div>
+
+      <section class="section" aria-labelledby="ambiente-title">
+        <div class="section-head"><div><h2 id="ambiente-title">Ambiente de estudo recomendado</h2><p>Comece com ferramentas simples, populares e bem documentadas. O objetivo é reduzir atrito e aprender conceitos transferíveis.</p></div><span class="meta-pill">setup inicial</span></div>
+        <div class="setup-grid">
+          <article class="info-card"><span class="tag">Sistema operacional</span><h3>Pop!_OS 24.04 LTS</h3><p><strong>1ª recomendação:</strong> amigável para iniciantes, baseado no ecossistema Ubuntu, com ambiente COSMIC e imagem específica para computadores com NVIDIA. <strong>2ª recomendação:</strong> Fedora Workstation, ideal para quem prefere GNOME e tecnologias mais recentes.</p></article>
+          <article class="info-card"><span class="tag">IDE principal</span><h3>VS Code</h3><p>Use para HTML, CSS, JavaScript, TypeScript, Git e Node.js. Instale poucas extensões: Prettier, ESLint, GitLens e a extensão da linguagem usada no momento.</p></article>
+          <article class="info-card"><span class="tag">IDE para Java</span><h3>IntelliJ IDEA</h3><p>A edição Community cobre Java e Maven/Gradle. Para Spring avançado, avalie Ultimate apenas quando houver necessidade real. VS Code com Extension Pack for Java também funciona.</p></article>
+        </div>
+        <div class="callout"><strong>Kit mínimo:</strong> Pop!_OS como primeira opção ou Fedora Workstation como segunda, Firefox + Chromium, VS Code, Git, GitHub CLI (opcional), Node.js via gerenciador de versões, Docker apenas a partir da fase de banco/back-end e IntelliJ quando começar Java. Não transforme a configuração do ambiente em um curso sem fim.</div>
+      </section>
+
+      <section class="section" id="roadmap">
+        <div class="section-head"><div><h2>Roadmap fase a fase</h2><p>Marque o que dominar; o progresso fica salvo no navegador. As durações são referências, não prazos rígidos.</p></div><span class="meta-pill">clique para expandir</span></div>
+        <div class="roadmap" id="roadmapList">
+
+          <details class="phase" id="fase-0" data-track="core" open>
+            <summary><span class="phase-number">00</span><span class="phase-title"><h3>Linux e ambiente de desenvolvimento</h3><p>Aprenda a trabalhar no sistema antes de acumular ferramentas.</p></span><span class="phase-meta"><span class="phase-time">1–2 semanas</span><span class="chevron">⌄</span></span></summary>
+            <div class="phase-body">
+              <div class="phase-progress"><span>Progresso da fase</span><span class="mini-track"><span class="mini-fill"></span></span><strong class="mini-label">0%</strong></div>
+              <div class="phase-grid">
+                <div class="phase-block"><h4>Estude e pratique</h4><div class="checklist">
+                  <label class="task"><input type="checkbox" data-task-id="f0-files"><span>Sistema de arquivos, caminhos absolutos/relativos, permissões e processos.</span></label>
+                  <label class="task"><input type="checkbox" data-task-id="f0-shell"><span>Terminal: <code>pwd</code>, <code>ls</code>, <code>cd</code>, <code>mkdir</code>, <code>cp</code>, <code>mv</code>, <code>rm</code>, pipes e redirecionamento.</span></label>
+                  <label class="task"><input type="checkbox" data-task-id="f0-packages"><span>Gerenciador APT no Pop!_OS ou DNF no Fedora, Flatpak, variáveis de ambiente, PATH, SSH e atualização segura.</span></label>
+                  <label class="task"><input type="checkbox" data-task-id="f0-editor"><span>VS Code, atalhos, terminal integrado, DevTools do navegador e depuração básica.</span></label>
+                </div></div>
+                <div class="phase-block"><h4>Projetos para publicar</h4><div class="project-list">
+                  <div class="project"><strong>Setup reproduzível</strong><p>Repositório <code>meu-ambiente-dev</code> com README, lista de ferramentas, aliases úteis e um script seguro de verificação.</p></div>
+                  <div class="project"><strong>Cheatsheet Linux</strong><p>Site HTML simples com comandos por categoria. Deploy: Netlify. Inclua exemplos e alertas para comandos destrutivos.</p></div>
+                </div></div>
+              </div>
+              <div class="deliverable"><strong>Critério de saída:</strong> criar pastas, instalar ferramentas, encontrar logs, corrigir permissões simples e explicar o que um comando fará antes de executá-lo.</div>
+            </div>
+          </details>
+
+          <details class="phase" id="fase-1" data-track="core">
+            <summary><span class="phase-number">01</span><span class="phase-title"><h3>Lógica e fundamentos de programação</h3><p>Pense como programador antes de depender de um framework.</p></span><span class="phase-meta"><span class="phase-time">4–6 semanas</span><span class="chevron">⌄</span></span></summary>
+            <div class="phase-body"><div class="phase-progress"><span>Progresso da fase</span><span class="mini-track"><span class="mini-fill"></span></span><strong class="mini-label">0%</strong></div><div class="phase-grid">
+              <div class="phase-block"><h4>Estude e pratique</h4><div class="checklist">
+                <label class="task"><input type="checkbox" data-task-id="f1-vars"><span>Variáveis, tipos, operadores, entrada/saída e conversões.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f1-flow"><span>Condicionais, laços, funções, escopo, recursão simples e tratamento de erros.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f1-data"><span>Arrays/listas, objetos/mapas, conjuntos, pilhas, filas e noção de complexidade Big O.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f1-problem"><span>Decomposição de problemas, pseudocódigo, testes de mesa e depuração.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f1-oop"><span>Paradigmas: imperativo, funcional básico e orientação a objetos sem dogmatismo.</span></label>
+              </div></div>
+              <div class="phase-block"><h4>Projetos para publicar</h4><div class="project-list">
+                <div class="project"><strong>Caixa eletrônico no terminal</strong><p>Saldo, depósito, saque, extrato, validação e testes. Comece em JavaScript.</p></div>
+                <div class="project"><strong>Jogo de adivinhação</strong><p>Níveis, tentativas, placar e persistência em arquivo ou localStorage.</p></div>
+                <div class="project"><strong>30 desafios explicados</strong><p>Cada solução com enunciado, raciocínio, complexidade e testes no repositório.</p></div>
+              </div></div>
+            </div><div class="deliverable"><strong>Critério de saída:</strong> resolver problemas pequenos sem vídeo passo a passo e explicar por que a solução funciona.</div></div>
+          </details>
+
+          <details class="phase" id="fase-2" data-track="core engineering">
+            <summary><span class="phase-number">02</span><span class="phase-title"><h3>Git, GitHub e trabalho profissional</h3><p>Versione desde o primeiro projeto; colaboração é parte da programação.</p></span><span class="phase-meta"><span class="phase-time">2–3 semanas</span><span class="chevron">⌄</span></span></summary>
+            <div class="phase-body"><div class="phase-progress"><span>Progresso da fase</span><span class="mini-track"><span class="mini-fill"></span></span><strong class="mini-label">0%</strong></div><div class="phase-grid">
+              <div class="phase-block"><h4>Estude e pratique</h4><div class="checklist">
+                <label class="task"><input type="checkbox" data-task-id="f2-git"><span><code>init</code>, <code>clone</code>, <code>status</code>, <code>add</code>, <code>commit</code>, <code>log</code>, <code>diff</code> e <code>.gitignore</code>.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f2-branch"><span>Branches, merge, rebase conceitual, conflitos, tags e releases.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f2-collab"><span>Issues, pull requests, code review, Conventional Commits e GitHub Actions básico.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f2-readme"><span>README orientado ao usuário: problema, demo, instalação, decisões e limitações.</span></label>
+              </div></div>
+              <div class="phase-block"><h4>Projetos para publicar</h4><div class="project-list">
+                <div class="project"><strong>Laboratório de Git</strong><p>Simule branches, conflito, correção, tag <code>v1.0.0</code> e uma pull request documentada.</p></div>
+                <div class="project"><strong>Contribuição open source</strong><p>Corrija documentação ou teste em um projeto acolhedor; registre o aprendizado.</p></div>
+              </div></div>
+            </div><div class="deliverable"><strong>Critério de saída:</strong> recuperar-se de um conflito sem apagar trabalho e manter histórico legível.</div></div>
+          </details>
+
+          <details class="phase" id="fase-3" data-track="web core">
+            <summary><span class="phase-number">03</span><span class="phase-title"><h3>Fundamentos da Web: HTML e CSS</h3><p>Semântica, responsividade e acessibilidade antes de componentes.</p></span><span class="phase-meta"><span class="phase-time">6–8 semanas</span><span class="chevron">⌄</span></span></summary>
+            <div class="phase-body"><div class="phase-progress"><span>Progresso da fase</span><span class="mini-track"><span class="mini-fill"></span></span><strong class="mini-label">0%</strong></div><div class="phase-grid">
+              <div class="phase-block"><h4>Estude e pratique</h4><div class="checklist">
+                <label class="task"><input type="checkbox" data-task-id="f3-web"><span>Internet, DNS, HTTP/HTTPS, cliente/servidor, URL, request, response e status codes.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f3-html"><span>HTML semântico, formulários, mídia, tabelas e metadados.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f3-css"><span>Box model, cascata, especificidade, unidades, tipografia, cores e custom properties.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f3-layout"><span>Flexbox, Grid, mobile-first, container/media queries e imagens responsivas.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f3-a11y"><span>Acessibilidade: teclado, foco, contraste, labels, landmarks e teste com leitor de tela.</span></label>
+              </div></div>
+              <div class="phase-block"><h4>Projetos para publicar</h4><div class="project-list">
+                <div class="project"><strong>Site pessoal acessível</strong><p>3 páginas, formulário, tema claro/escuro e Lighthouse documentado. Deploy: Netlify.</p></div>
+                <div class="project"><strong>Landing page responsiva</strong><p>Reproduza um layout a partir de design próprio, sem framework CSS.</p></div>
+                <div class="project"><strong>Guia de componentes HTML</strong><p>Botões, campos, alertas e cards com estados de foco, erro e desabilitado.</p></div>
+              </div></div>
+            </div><div class="deliverable"><strong>Critério de saída:</strong> transformar um rascunho em página responsiva, navegável por teclado e válida sem copiar um template.</div></div>
+          </details>
+
+          <details class="phase" id="fase-4" data-track="web core">
+            <summary><span class="phase-number">04</span><span class="phase-title"><h3>JavaScript moderno e TypeScript</h3><p>Domine a linguagem e o navegador antes de aprender React.</p></span><span class="phase-meta"><span class="phase-time">7–10 semanas</span><span class="chevron">⌄</span></span></summary>
+            <div class="phase-body"><div class="phase-progress"><span>Progresso da fase</span><span class="mini-track"><span class="mini-fill"></span></span><strong class="mini-label">0%</strong></div><div class="phase-grid">
+              <div class="phase-block"><h4>Estude e pratique</h4><div class="checklist">
+                <label class="task"><input type="checkbox" data-task-id="f4-js"><span>Tipos, coerção, funções, closures, objetos, protótipos, classes, módulos e imutabilidade.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f4-dom"><span>DOM, eventos, formulários, localStorage e Web APIs.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f4-async"><span>Event loop, promises, <code>async/await</code>, <code>fetch</code>, erros e cancelamento.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f4-tooling"><span>npm, package.json, scripts, Vite, ESLint, Prettier e DevTools.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f4-ts"><span>TypeScript: tipos, interfaces, unions, generics, narrowing e configuração strict.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f4-test"><span>Testes unitários com Vitest/Jest e testes de DOM com Testing Library.</span></label>
+              </div></div>
+              <div class="phase-block"><h4>Projetos para publicar</h4><div class="project-list">
+                <div class="project"><strong>Kanban offline</strong><p>CRUD, filtros, drag and drop, persistência local e exportação JSON.</p></div>
+                <div class="project"><strong>Dashboard de API pública</strong><p>Busca, loading, erro, cache simples, paginação e acessibilidade.</p></div>
+                <div class="project"><strong>Quiz TypeScript</strong><p>Timer, ranking local, testes e pipeline de CI. Deploy: Netlify.</p></div>
+              </div></div>
+            </div><div class="deliverable"><strong>Critério de saída:</strong> consumir uma API, modelar os dados, tratar falhas e testar a lógica sem framework de interface.</div></div>
+          </details>
+
+          <details class="phase" id="fase-5" data-track="web">
+            <summary><span class="phase-number">05</span><span class="phase-title"><h3>Front-end profissional com React</h3><p>Componentização, estado, dados remotos e experiência do usuário.</p></span><span class="phase-meta"><span class="phase-time">8–10 semanas</span><span class="chevron">⌄</span></span></summary>
+            <div class="phase-body"><div class="phase-progress"><span>Progresso da fase</span><span class="mini-track"><span class="mini-fill"></span></span><strong class="mini-label">0%</strong></div><div class="phase-grid">
+              <div class="phase-block"><h4>Estude e pratique</h4><div class="checklist">
+                <label class="task"><input type="checkbox" data-task-id="f5-react"><span>JSX, componentes, props, estado, eventos, composição e ciclo de renderização.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f5-hooks"><span>Hooks, formulários, contexto, reducers e regras para evitar estado desnecessário.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f5-router"><span>React Router, rotas protegidas, lazy loading e boundaries.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f5-data"><span>TanStack Query para estado de servidor; Zustand apenas quando estado global for justificável.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f5-quality"><span>Testes de comportamento, acessibilidade, performance e design system básico.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f5-next"><span>Depois de React: Next.js para SSR/SSG, roteamento e aplicações full-stack quando o projeto pedir.</span></label>
+              </div></div>
+              <div class="phase-block"><h4>Projetos para publicar</h4><div class="project-list">
+                <div class="project"><strong>Gestor financeiro</strong><p>Dashboard, filtros, formulários validados, gráficos acessíveis, testes e dados mockados.</p></div>
+                <div class="project"><strong>Catálogo com busca</strong><p>URL como estado, paginação, favoritos, skeleton, erros e responsividade.</p></div>
+                <div class="project"><strong>Design system pequeno</strong><p>10–15 componentes documentados em Storybook. Publique a documentação.</p></div>
+              </div></div>
+            </div><div class="deliverable"><strong>Critério de saída:</strong> estruturar uma aplicação média, separar estado local/remoto e justificar cada biblioteca adicionada.</div></div>
+          </details>
+
+          <details class="phase" id="fase-6" data-track="web engineering">
+            <summary><span class="phase-number">06</span><span class="phase-title"><h3>Banco de dados e modelagem</h3><p>SQL primeiro; ORM depois. Dados corretos valem mais que CRUD rápido.</p></span><span class="phase-meta"><span class="phase-time">5–7 semanas</span><span class="chevron">⌄</span></span></summary>
+            <div class="phase-body"><div class="phase-progress"><span>Progresso da fase</span><span class="mini-track"><span class="mini-fill"></span></span><strong class="mini-label">0%</strong></div><div class="phase-grid">
+              <div class="phase-block"><h4>Estude e pratique</h4><div class="checklist">
+                <label class="task"><input type="checkbox" data-task-id="f6-model"><span>Modelo relacional, entidades, cardinalidade, normalização e diagramas ER.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f6-sql"><span>PostgreSQL: DDL, CRUD, joins, agregações, subqueries, CTEs e window functions.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f6-integrity"><span>PK/FK, constraints, índices, transações, isolamento e integridade.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f6-perf"><span><code>EXPLAIN</code>, planos de execução, paginação e problemas N+1.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f6-nosql"><span>NoSQL depois: documentos, chave-valor e cache; aprenda quando cada modelo faz sentido.</span></label>
+              </div></div>
+              <div class="phase-block"><h4>Projetos para publicar</h4><div class="project-list">
+                <div class="project"><strong>Banco de biblioteca</strong><p>Modelo ER, migrations, seed, 20 consultas reais e explicação dos índices.</p></div>
+                <div class="project"><strong>Analytics de vendas</strong><p>Dataset público, CTEs, window functions, views e relatório de performance.</p></div>
+              </div></div>
+            </div><div class="deliverable"><strong>Critério de saída:</strong> modelar requisitos em tabelas consistentes e explicar por que cada índice existe.</div></div>
+          </details>
+
+          <details class="phase" id="fase-7" data-track="web engineering">
+            <summary><span class="phase-number">07</span><span class="phase-title"><h3>Back-end com Node.js e TypeScript</h3><p>APIs seguras, testáveis e conectadas ao PostgreSQL.</p></span><span class="phase-meta"><span class="phase-time">8–10 semanas</span><span class="chevron">⌄</span></span></summary>
+            <div class="phase-body"><div class="phase-progress"><span>Progresso da fase</span><span class="mini-track"><span class="mini-fill"></span></span><strong class="mini-label">0%</strong></div><div class="phase-grid">
+              <div class="phase-block"><h4>Estude e pratique</h4><div class="checklist">
+                <label class="task"><input type="checkbox" data-task-id="f7-node"><span>Node.js runtime, módulos, streams, variáveis de ambiente e concorrência assíncrona.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f7-api"><span>REST, recursos, verbos, status, paginação, filtros, idempotência e versionamento.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f7-framework"><span>Comece com Fastify ou Express; estude NestJS depois para projetos maiores e arquitetura opinativa.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f7-db"><span>Driver SQL ou ORM (Prisma/Drizzle), migrations, transactions e connection pooling.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f7-auth"><span>Autenticação, autorização, hash de senha, cookies seguros, JWT quando adequado, CORS e rate limiting.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f7-tests"><span>Testes unitários, integração com banco real isolado, contract tests e OpenAPI.</span></label>
+              </div></div>
+              <div class="phase-block"><h4>Projetos para publicar</h4><div class="project-list">
+                <div class="project"><strong>API de reservas</strong><p>Concorrência, conflitos de horário, autenticação por papel, testes e documentação OpenAPI.</p></div>
+                <div class="project"><strong>Encurtador de URLs</strong><p>Redirect, expiração, rate limit, analytics e cache. Deploy em serviço compatível com Node.</p></div>
+                <div class="project"><strong>API de tarefas em equipe</strong><p>Usuários, convites, permissões, auditoria e CI.</p></div>
+              </div></div>
+            </div><div class="deliverable"><strong>Critério de saída:</strong> publicar uma API documentada, protegida e testada; o front-end não deve ser o único cliente possível.</div></div>
+          </details>
+
+          <details class="phase" id="fase-8" data-track="web engineering">
+            <summary><span class="phase-number">08</span><span class="phase-title"><h3>Full-stack, segurança e qualidade</h3><p>Integre front, API e dados como um produto completo.</p></span><span class="phase-meta"><span class="phase-time">8–12 semanas</span><span class="chevron">⌄</span></span></summary>
+            <div class="phase-body"><div class="phase-progress"><span>Progresso da fase</span><span class="mini-track"><span class="mini-fill"></span></span><strong class="mini-label">0%</strong></div><div class="phase-grid">
+              <div class="phase-block"><h4>Estude e pratique</h4><div class="checklist">
+                <label class="task"><input type="checkbox" data-task-id="f8-security"><span>OWASP Top 10, validação no servidor, XSS, CSRF, SQL injection, SSRF e gestão de segredos.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f8-e2e"><span>Testes E2E com Playwright/Cypress, pirâmide de testes e fixtures confiáveis.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f8-observe"><span>Logs estruturados, métricas, tracing conceitual, health checks e tratamento de incidentes.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f8-perf"><span>Core Web Vitals, cache HTTP, CDN, compressão, otimização de imagens e queries.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f8-ux"><span>Estados vazios, loading, erro, retry, feedback, acessibilidade e mobile real.</span></label>
+              </div></div>
+              <div class="phase-block"><h4>Projeto principal de portfólio</h4><div class="project-list">
+                <div class="project"><strong>SaaS de agendamento</strong><p>React/Next, API, PostgreSQL, autenticação, papéis, e-mails simulados, testes E2E, observabilidade, CI e documentação arquitetural.</p></div>
+                <div class="project"><strong>Alternativa: plataforma de estudos</strong><p>Trilhas, progresso, quiz, painel administrativo, busca, importação/exportação e auditoria.</p></div>
+              </div></div>
+            </div><div class="deliverable"><strong>Critério de saída:</strong> demonstrar uma jornada completa em produção, com usuário de demo, dados de exemplo e decisões documentadas.</div></div>
+          </details>
+
+          <details class="phase" id="fase-9" data-track="engineering">
+            <summary><span class="phase-number">09</span><span class="phase-title"><h3>Engenharia de software</h3><p>Construa software que outra pessoa consegue entender e manter.</p></span><span class="phase-meta"><span class="phase-time">6–8 semanas + contínuo</span><span class="chevron">⌄</span></span></summary>
+            <div class="phase-body"><div class="phase-progress"><span>Progresso da fase</span><span class="mini-track"><span class="mini-fill"></span></span><strong class="mini-label">0%</strong></div><div class="phase-grid">
+              <div class="phase-block"><h4>Estude e pratique</h4><div class="checklist">
+                <label class="task"><input type="checkbox" data-task-id="f9-design"><span>Coesão, acoplamento, encapsulamento, SOLID como heurística e composição sobre herança.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f9-clean"><span>Clean Code com senso crítico, refatoração, code smells e dívida técnica.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f9-process"><span>Requisitos, histórias, critérios de aceite, estimativas, Kanban/Scrum e Definition of Done.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f9-review"><span>Code review, ADRs, documentação viva, changelog e versionamento semântico.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f9-test"><span>TDD quando ajudar, test doubles, contratos, integração e estratégia de testes baseada em risco.</span></label>
+              </div></div>
+              <div class="phase-block"><h4>Projetos para publicar</h4><div class="project-list">
+                <div class="project"><strong>Refatoração documentada</strong><p>Pegue projeto antigo, registre problemas, abra issues, faça PRs pequenos e compare métricas/legibilidade.</p></div>
+                <div class="project"><strong>Projeto em equipe</strong><p>2–4 pessoas, board, revisão obrigatória, releases, retrospectiva e contribuição equilibrada.</p></div>
+              </div></div>
+            </div><div class="deliverable"><strong>Critério de saída:</strong> justificar trade-offs e entregar mudanças pequenas, revisáveis e protegidas por testes úteis.</div></div>
+          </details>
+
+          <details class="phase" id="fase-10" data-track="engineering">
+            <summary><span class="phase-number">10</span><span class="phase-title"><h3>Arquitetura de software</h3><p>Comece simples: monólito modular antes de microserviços.</p></span><span class="phase-meta"><span class="phase-time">6–8 semanas + prática</span><span class="chevron">⌄</span></span></summary>
+            <div class="phase-body"><div class="phase-progress"><span>Progresso da fase</span><span class="mini-track"><span class="mini-fill"></span></span><strong class="mini-label">0%</strong></div><div class="phase-grid">
+              <div class="phase-block"><h4>Estude e pratique</h4><div class="checklist">
+                <label class="task"><input type="checkbox" data-task-id="f10-modular"><span>Camadas, módulos, dependências, boundaries e monólito modular.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f10-arch"><span>Clean/Hexagonal Architecture, ports & adapters e inversão de dependência.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f10-ddd"><span>DDD essencial: linguagem ubíqua, agregados, entidades, value objects e bounded contexts.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f10-dist"><span>Sistemas distribuídos: latência, falhas parciais, consistência, filas, retries e idempotência.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f10-doc"><span>C4 Model, ADRs, diagramas de sequência e requisitos de qualidade.</span></label>
+              </div></div>
+              <div class="phase-block"><h4>Projetos para publicar</h4><div class="project-list">
+                <div class="project"><strong>Monólito modular de pedidos</strong><p>Catálogo, pedido, pagamento simulado e estoque; módulos claros, eventos internos e ADRs.</p></div>
+                <div class="project"><strong>Experimento com fila</strong><p>Processamento assíncrono idempotente, retry com backoff e dead-letter conceitual.</p></div>
+              </div></div>
+            </div><div class="deliverable"><strong>Critério de saída:</strong> desenhar limites, reconhecer custos de distribuição e evitar microserviços por moda.</div></div>
+          </details>
+
+          <details class="phase" id="fase-11" data-track="engineering web">
+            <summary><span class="phase-number">11</span><span class="phase-title"><h3>Deploy, DevOps e operação</h3><p>O projeto só termina quando outra pessoa consegue usá-lo.</p></span><span class="phase-meta"><span class="phase-time">4–6 semanas</span><span class="chevron">⌄</span></span></summary>
+            <div class="phase-body"><div class="phase-progress"><span>Progresso da fase</span><span class="mini-track"><span class="mini-fill"></span></span><strong class="mini-label">0%</strong></div><div class="phase-grid">
+              <div class="phase-block"><h4>Estude e pratique</h4><div class="checklist">
+                <label class="task"><input type="checkbox" data-task-id="f11-netlify"><span>Netlify: deploy por Git, variáveis, redirects, headers, previews e domínio.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f11-ci"><span>CI/CD com GitHub Actions: lint, teste, build, artefato e proteção de branch.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f11-docker"><span>Docker: imagem, container, volumes, redes, Dockerfile multi-stage e Compose local.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f11-cloud"><span>Conceitos de cloud: compute, storage, banco gerenciado, CDN, DNS, custo e least privilege.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f11-run"><span>Backups, migrations, rollback, alertas, SLO/SLI conceitual e runbook.</span></label>
+              </div></div>
+              <div class="phase-block"><h4>Projetos para publicar</h4><div class="project-list">
+                <div class="project"><strong>Pipeline completo</strong><p>PR gera preview, testes bloqueiam merge e tag produz release. Documente rollback.</p></div>
+                <div class="project"><strong>Ambiente local com Compose</strong><p>Aplicação + PostgreSQL + health checks + seed, iniciado com um comando.</p></div>
+              </div></div>
+            </div><div class="deliverable"><strong>Critério de saída:</strong> fazer deploy repetível sem editar arquivos manualmente e diagnosticar uma falha com logs.</div></div>
+          </details>
+
+          <details class="phase" id="fase-12" data-track="java engineering">
+            <summary><span class="phase-number">12</span><span class="phase-title"><h3 id="java">Especialização opcional: Java e Spring</h3><p>Uma segunda stack de back-end para sistemas robustos e ecossistema corporativo.</p></span><span class="phase-meta"><span class="phase-time">14–20 semanas</span><span class="chevron">⌄</span></span></summary>
+            <div class="phase-body"><div class="phase-progress"><span>Progresso da fase</span><span class="mini-track"><span class="mini-fill"></span></span><strong class="mini-label">0%</strong></div><div class="phase-grid">
+              <div class="phase-block"><h4>Fundamentos Java</h4><div class="checklist">
+                <label class="task"><input type="checkbox" data-task-id="f12-jdk"><span>JDK, JVM, bytecode, compilação, JShell e Java 21 LTS (ou 25 LTS quando a stack suportar).</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f12-language"><span>Tipos, controle de fluxo, métodos, arrays, strings, records, enums, packages e módulos.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f12-oop"><span>Classes, objetos, encapsulamento, interfaces, herança, polimorfismo e composição.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f12-core"><span>Collections, generics, exceptions, I/O/NIO, datas, regex, annotations e reflexão conceitual.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f12-modern"><span>Lambdas, Streams, Optional, concorrência, executors, CompletableFuture e virtual threads.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f12-build"><span>Maven primeiro; Gradle depois. JUnit 5, AssertJ, Mockito, JaCoCo e Testcontainers.</span></label>
+              </div></div>
+              <div class="phase-block"><h4>Ecossistema e projetos</h4><div class="checklist">
+                <label class="task"><input type="checkbox" data-task-id="f12-spring"><span>Spring Core/DI, Spring Boot, Web MVC, Validation, Data JPA, Security, Actuator e configuration profiles.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f12-persist"><span>JPA/Hibernate, mappings, transactions, fetching, N+1, migrations com Flyway/Liquibase e PostgreSQL.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f12-api"><span>REST, RFC 7807/problem details, OpenAPI, paginação, autenticação e autorização.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f12-alt"><span>Conheça depois: Quarkus/Micronaut para cloud-native; Jakarta EE quando o contexto pedir.</span></label>
+              </div><div class="project-list" style="margin-top:.8rem">
+                <div class="project"><strong>CLI bancário em Java</strong><p>POO, collections, exceptions, testes e persistência em arquivo.</p></div>
+                <div class="project"><strong>API Spring Boot de pedidos</strong><p>PostgreSQL, JPA, migrations, segurança, testes unitários/integração e OpenAPI.</p></div>
+                <div class="project"><strong>Sistema full-stack</strong><p>React + API Spring, Docker Compose, CI, observabilidade e deploy em serviço compatível com Java.</p></div>
+              </div></div>
+            </div><div class="deliverable"><strong>Critério de saída:</strong> criar uma API Spring sem gerador mágico, explicar DI/transações e detectar N+1. IDE: IntelliJ IDEA.</div></div>
+          </details>
+
+          <details class="phase" id="fase-13" data-track="career">
+            <summary><span class="phase-number">13</span><span class="phase-title"><h3>Portfólio, carreira e evolução contínua</h3><p>Mostre decisões, processo e impacto — não apenas screenshots.</p></span><span class="phase-meta"><span class="phase-time">contínuo</span><span class="chevron">⌄</span></span></summary>
+            <div class="phase-body"><div class="phase-progress"><span>Progresso da fase</span><span class="mini-track"><span class="mini-fill"></span></span><strong class="mini-label">0%</strong></div><div class="phase-grid">
+              <div class="phase-block"><h4>Construa sua presença</h4><div class="checklist">
+                <label class="task"><input type="checkbox" data-task-id="f13-profile"><span>GitHub com bio clara, foto, tecnologias reais e 4–6 repositórios fixados.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f13-case"><span>Cases: problema, papel, escolhas, arquitetura, trade-offs, resultados e próximos passos.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f13-cv"><span>Currículo de uma página, LinkedIn consistente e apresentação de 60 segundos.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f13-interview"><span>Prática de entrevistas: fundamentos, projeto, SQL, HTTP, depuração e algoritmos básicos.</span></label>
+                <label class="task"><input type="checkbox" data-task-id="f13-community"><span>Comunidade, eventos, escrita técnica, mentoria e contribuições open source.</span></label>
+              </div></div>
+              <div class="phase-block"><h4>Portfólio mínimo forte</h4><div class="project-list">
+                <div class="project"><strong>1 projeto front-end refinado</strong><p>Responsivo, acessível, rápido e testado.</p></div>
+                <div class="project"><strong>1 API com banco</strong><p>Segurança, documentação, testes e deploy.</p></div>
+                <div class="project"><strong>1 produto full-stack</strong><p>Problema real, usuário de demo, CI e case completo.</p></div>
+                <div class="project"><strong>1 colaboração</strong><p>Projeto em equipe ou contribuição open source revisada.</p></div>
+              </div></div>
+            </div><div class="deliverable"><strong>Critério de saída:</strong> qualquer recrutador consegue testar o projeto, entender sua contribuição e localizar o código em menos de dois minutos.</div></div>
+          </details>
+        </div>
+        <div class="empty-state" id="emptyState">Nenhuma fase corresponde ao filtro ou à busca. Tente um termo mais amplo.</div>
+      </section>
+
+      <section class="section" id="stacks">
+        <div class="section-head"><div><h2>Qual stack escolher depois dos fundamentos?</h2><p>Escolha uma rota principal por pelo menos seis meses. Profundidade vence uma coleção de tutoriais.</p></div><span class="meta-pill">decisão prática</span></div>
+        <div class="decision-grid">
+          <article class="info-card"><span class="tag">Entrada mais suave</span><h3>Front-end</h3><p>Para quem gosta de interface, feedback visual e experiência do usuário.</p><ul class="stack-list"><li>HTML + CSS + JavaScript</li><li>TypeScript + React + Vite</li><li>React Router + TanStack Query</li><li>Vitest + Testing Library + Playwright</li><li>Netlify para deploy</li></ul></article>
+          <article class="info-card"><span class="tag">Recomendação principal</span><h3>Full-stack TypeScript</h3><p>Uma linguagem no navegador e no servidor reduz o custo cognitivo no início.</p><ul class="stack-list"><li>React/Next.js no front-end</li><li>Node.js + Fastify; NestJS depois</li><li>PostgreSQL + Prisma/Drizzle</li><li>OpenAPI + testes de integração</li><li>Docker + CI/CD</li></ul></article>
+          <article class="info-card"><span class="tag">Especialização posterior</span><h3>Java + Spring</h3><p>Excelente para back-end robusto, sistemas de longa vida e mercado corporativo.</p><ul class="stack-list"><li>Java LTS + Maven</li><li>Spring Boot + Spring Web</li><li>Spring Data JPA + PostgreSQL</li><li>Spring Security + Actuator</li><li>JUnit + Mockito + Testcontainers</li></ul></article>
+        </div>
+        <div class="callout"><strong>Sequência que evita confusão:</strong> JavaScript → TypeScript → React → HTTP/API → PostgreSQL → Node → projeto full-stack. Depois escolha: aprofundar Node/Next ou abrir a trilha Java/Spring. Não estude React, Angular, Vue, Node, Java e Python ao mesmo tempo.</div>
+      </section>
+
+      <section class="section" id="projetos">
+        <div class="section-head"><div><h2>Padrão de entrega para todo projeto</h2><p>O repositório e o deploy são parte do projeto, não tarefas opcionais no final.</p></div><span class="meta-pill">checklist de portfólio</span></div>
+        <div class="matrix-wrap"><table>
+          <thead><tr><th>Área</th><th>Obrigatório</th><th>Excelente diferencial</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Repositório</strong></td><td>Nome claro, commits legíveis, <code>.gitignore</code>, licença e sem segredos.</td><td>Issues, PRs, tags/releases e changelog.</td></tr>
+            <tr><td><strong>README</strong></td><td>Problema, demo, screenshots, stack, instalação e funcionalidades.</td><td>Decisões, limitações, arquitetura e roadmap.</td></tr>
+            <tr><td><strong>Qualidade</strong></td><td>Formatação, lint, tratamento de erro e testes da lógica crítica.</td><td>CI, cobertura com contexto, E2E e auditoria de acessibilidade.</td></tr>
+            <tr><td><strong>Deploy</strong></td><td>URL funcionando, versão mobile e dados de demonstração.</td><td>Preview por PR, domínio, monitoramento e rollback documentado.</td></tr>
+            <tr><td><strong>Segurança</strong></td><td>Variáveis de ambiente, validação e dependências revisadas.</td><td>Threat model curto, headers e análise automatizada.</td></tr>
+          </tbody>
+        </table></div>
+        <div class="repo-template" style="margin-top:1rem"><strong>Estrutura sugerida do README</strong><pre># Nome do projeto
+Resumo em uma frase · [Demo] · [Screenshots]
+
+## Problema e público
+## Funcionalidades
+## Tecnologias e decisões
+## Como executar e testar
+## Arquitetura / modelo de dados
+## Acessibilidade e segurança
+## Limitações e próximos passos
+## Autor e licença</pre></div>
+      </section>
+
+      <section class="section" id="ia">
+        <div class="section-head"><div><h2>Desenvolvimento assistido por IA</h2><p>Use IA como par de programação e instrumento de aprendizagem — não como substituto da compreensão.</p></div><span class="meta-pill">desde a fase 1</span></div>
+        <div class="setup-grid">
+          <article class="info-card"><span class="tag">Antes de gerar</span><h3>Defina o problema</h3><p>Escreva requisitos, exemplos, restrições e critérios de aceite. Peça um plano pequeno e confirme suposições antes de pedir código.</p></article>
+          <article class="info-card"><span class="tag">Durante</span><h3>Trabalhe em diffs pequenos</h3><p>Forneça arquivos relevantes, peça uma mudança por vez, rode o código, leia o diff e solicite testes para comportamentos importantes.</p></article>
+          <article class="info-card"><span class="tag">Depois</span><h3>Verifique tudo</h3><p>Compile, teste, consulte a documentação oficial, faça revisão de segurança e explique a solução com suas palavras antes do commit.</p></article>
+        </div>
+        <div class="matrix-wrap" style="margin-top:1rem"><table>
+          <thead><tr><th>Use IA para</th><th>Não delegue cegamente</th><th>Evidência de aprendizado</th></tr></thead>
+          <tbody>
+            <tr><td>Explicar erros, criar casos de teste, revisar código, comparar abordagens, gerar dados fictícios e documentação inicial.</td><td>Decisões de segurança, migrations destrutivas, licenças, credenciais, arquitetura sem contexto e aprovação final.</td><td>Você consegue reproduzir sem chat, depurar uma variação e explicar os trade-offs.</td></tr>
+            <tr><td>Prompt útil: contexto → objetivo → restrições → critérios de aceite → formato esperado.</td><td>Nunca cole chaves, dados pessoais, código confidencial ou conteúdo cuja política você desconhece.</td><td>Registre no README onde a IA ajudou e o que você verificou.</td></tr>
+          </tbody>
+        </table></div>
+        <div class="callout"><strong>Rotina recomendada:</strong> tente por 20–30 minutos → formule a dúvida → peça pistas antes da solução → implemente → peça revisão → escreva testes → compare com a documentação. Escolha um assistente principal (por exemplo, Codex ou GitHub Copilot) e aprenda a usá-lo bem.</div>
+      </section>
+
+      <section class="section" id="fontes">
+        <div class="section-head"><div><h2>Fontes oficiais para estudar</h2><p>Use cursos para sequência e documentação para precisão. Favoritos demais viram procrastinação.</p></div><span class="meta-pill">base do roadmap</span></div>
+        <div class="resources-grid">
+          <article class="info-card"><a href="https://developer.mozilla.org/en-US/curriculum/" target="_blank" rel="noreferrer">MDN Curriculum ↗</a><small>Base moderna para HTML, CSS, JavaScript, acessibilidade, performance e práticas web.</small></article>
+          <article class="info-card"><a href="https://system76.com/download-pop/" target="_blank" rel="noreferrer">Pop!_OS — download oficial ↗</a><small>Primeira recomendação do roadmap: versão LTS, desktop COSMIC e opções próprias para diferentes GPUs.</small></article>
+          <article class="info-card"><a href="https://fedoraproject.org/workstation/" target="_blank" rel="noreferrer">Fedora Workstation ↗</a><small>Segunda recomendação: GNOME, ferramentas atuais e excelente integração com containers.</small></article>
+          <article class="info-card"><a href="https://git-scm.com/doc" target="_blank" rel="noreferrer">Documentação do Git ↗</a><small>Referência oficial e livro Pro Git gratuito.</small></article>
+          <article class="info-card"><a href="https://react.dev/learn" target="_blank" rel="noreferrer">React — Learn ↗</a><small>Conceitos, exemplos e uso com TypeScript.</small></article>
+          <article class="info-card"><a href="https://www.typescriptlang.org/docs/handbook/intro.html" target="_blank" rel="noreferrer">TypeScript Handbook ↗</a><small>Tipos, narrowing, generics e configuração da linguagem.</small></article>
+          <article class="info-card"><a href="https://www.postgresql.org/docs/current/tutorial.html" target="_blank" rel="noreferrer">Tutorial PostgreSQL ↗</a><small>SQL, joins, agregações, transações e recursos avançados.</small></article>
+          <article class="info-card"><a href="https://docs.docker.com/get-started/" target="_blank" rel="noreferrer">Docker Get Started ↗</a><small>Containers, imagens, volumes, redes e Compose.</small></article>
+          <article class="info-card"><a href="https://dev.java/learn/" target="_blank" rel="noreferrer">Dev.java — Learn ↗</a><small>Tutoriais Java atualizados; prefira este material ao tutorial antigo do JDK 8.</small></article>
+          <article class="info-card"><a href="https://spring.io/guides" target="_blank" rel="noreferrer">Spring Guides ↗</a><small>Guias oficiais para Spring Boot, REST, dados, segurança e testes.</small></article>
+          <article class="info-card"><a href="https://owasp.org/www-project-top-ten/" target="_blank" rel="noreferrer">OWASP Top 10 ↗</a><small>Riscos mais importantes de segurança em aplicações web.</small></article>
+          <article class="info-card"><a href="https://docs.github.com/en/actions" target="_blank" rel="noreferrer">GitHub Actions ↗</a><small>Automação de testes, builds e entrega contínua.</small></article>
+          <article class="info-card"><a href="https://docs.netlify.com/deploy/create-deploys/" target="_blank" rel="noreferrer">Deploy no Netlify ↗</a><small>Deploy por Git ou arrastando a pasta; previews e publicação contínua.</small></article>
+        </div>
+      </section>
+
+      <footer><span>Roadmap educacional · personalize conforme seu ritmo e oportunidades.</span><span>Última revisão: 28/09/2026 · progresso armazenado localmente</span></footer>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      const STORAGE = 'roadmap-dev-web-v1';
+      const THEME = 'roadmap-dev-theme';
+      const tasks = [...document.querySelectorAll('[data-task-id]')];
+      const phases = [...document.querySelectorAll('.phase')];
+      const progressOutput = document.querySelector('#progressOutput');
+      const progressFill = document.querySelector('#progressFill');
+      const progressCount = document.querySelector('#progressCount');
+      const searchInput = document.querySelector('#searchInput');
+      const chips = [...document.querySelectorAll('.chip')];
+      const emptyState = document.querySelector('#emptyState');
+      const toast = document.querySelector('#toast');
+      let activeFilter = 'all';
+      let toastTimer;
+
+      const readProgress = () => {
+        try { return JSON.parse(localStorage.getItem(STORAGE)) || {}; }
+        catch { return {}; }
+      };
+
+      const saveProgress = () => {
+        const state = Object.fromEntries(tasks.map(task => [task.dataset.taskId, task.checked]));
+        localStorage.setItem(STORAGE, JSON.stringify(state));
+      };
+
+      const showToast = message => {
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+      };
+
+      const updateProgress = () => {
+        const done = tasks.filter(task => task.checked).length;
+        const percent = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
+        progressOutput.value = `${percent}%`;
+        progressOutput.textContent = `${percent}%`;
+        progressFill.style.width = `${percent}%`;
+        progressCount.textContent = `${done} de ${tasks.length} tópicos`;
+
+        phases.forEach(phase => {
+          const localTasks = [...phase.querySelectorAll('[data-task-id]')];
+          const localDone = localTasks.filter(task => task.checked).length;
+          const localPercent = localTasks.length ? Math.round((localDone / localTasks.length) * 100) : 0;
+          phase.querySelector('.mini-fill').style.width = `${localPercent}%`;
+          phase.querySelector('.mini-label').textContent = `${localPercent}%`;
+        });
+      };
+
+      const applyFilters = () => {
+        const query = searchInput.value.trim().toLocaleLowerCase('pt-BR');
+        let visible = 0;
+        phases.forEach(phase => {
+          const trackMatch = activeFilter === 'all' || phase.dataset.track.split(' ').includes(activeFilter);
+          const textMatch = !query || phase.textContent.toLocaleLowerCase('pt-BR').includes(query);
+          phase.hidden = !(trackMatch && textMatch);
+          if (!phase.hidden) {
+            visible += 1;
+            if (query) phase.open = true;
+          }
+        });
+        emptyState.classList.toggle('visible', visible === 0);
+      };
+
+      const saved = readProgress();
+      tasks.forEach(task => {
+        task.checked = Boolean(saved[task.dataset.taskId]);
+        task.addEventListener('change', () => {
+          saveProgress();
+          updateProgress();
+        });
+      });
+      updateProgress();
+
+      searchInput.addEventListener('input', applyFilters);
+      chips.forEach(chip => chip.addEventListener('click', () => {
+        activeFilter = chip.dataset.filter;
+        chips.forEach(item => item.setAttribute('aria-pressed', String(item === chip)));
+        applyFilters();
+      }));
+
+      document.querySelector('#expandAll').addEventListener('click', event => {
+        const visiblePhases = phases.filter(phase => !phase.hidden);
+        const shouldOpen = visiblePhases.some(phase => !phase.open);
+        visiblePhases.forEach(phase => phase.open = shouldOpen);
+        event.currentTarget.querySelector('.wide').textContent = shouldOpen ? 'Recolher fases' : 'Expandir fases';
+      });
+
+      document.querySelector('#resetBtn').addEventListener('click', () => {
+        if (!window.confirm('Limpar todo o progresso salvo neste navegador?')) return;
+        tasks.forEach(task => task.checked = false);
+        localStorage.removeItem(STORAGE);
+        updateProgress();
+        showToast('Progresso limpo.');
+      });
+
+      const root = document.documentElement;
+      const storedTheme = localStorage.getItem(THEME);
+      if (storedTheme) root.dataset.theme = storedTheme;
+      else if (window.matchMedia('(prefers-color-scheme: light)').matches) root.dataset.theme = 'light';
+      document.querySelector('#themeBtn').addEventListener('click', () => {
+        const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        localStorage.setItem(THEME, next);
+        showToast(`Tema ${next === 'light' ? 'claro' : 'escuro'} ativado.`);
+      });
+
+      document.querySelector('#printBtn').addEventListener('click', () => window.print());
+
+      const navToggle = document.querySelector('#navToggle');
+      navToggle.addEventListener('click', () => {
+        const open = document.body.classList.toggle('nav-open');
+        navToggle.setAttribute('aria-expanded', String(open));
+        navToggle.textContent = open ? '×' : '☰';
+      });
+      document.querySelectorAll('.side-nav a').forEach(link => link.addEventListener('click', () => {
+        document.body.classList.remove('nav-open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.textContent = '☰';
+      }));
+
+      const observed = [...document.querySelectorAll('main > section[id]')];
+      const navLinks = [...document.querySelectorAll('.side-nav a')];
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(entries => {
+          const current = entries.filter(entry => entry.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+          if (!current) return;
+          navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${current.target.id}`));
+        }, { rootMargin: '-20% 0px -65%', threshold: [0, .2, .6] });
+        observed.forEach(section => observer.observe(section));
+      }
+    })();
+  </script>
+</body>
+</html>
